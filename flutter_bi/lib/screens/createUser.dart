@@ -66,6 +66,10 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Create New User'),
+        backgroundColor: const Color.fromARGB(255, 14, 47, 85),
+      ),
       backgroundColor: const Color.fromARGB(255, 11, 39, 72),
       body: Center(
         child: SingleChildScrollView(
@@ -77,6 +81,9 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
                 style: TextStyle(color: Colors.white, fontSize: 27),
               ),
               Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
                 margin: const EdgeInsets.all(20),
                 child: SingleChildScrollView(
                   child: Padding(
@@ -141,19 +148,20 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
                             const CircularProgressIndicator(),
                           if (!_isSendingRequest)
                             ElevatedButton(
-                              onPressed: _onCreateNewUser,
                               style: ElevatedButton.styleFrom(
-                                  backgroundColor: Theme.of(context)
-                                      .colorScheme
-                                      .primaryContainer),
-                              child: const Text('Create New User.'),
+                                backgroundColor:
+                                    const Color.fromARGB(255, 14, 47, 85),
+                                minimumSize: const Size.fromHeight(48),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              onPressed: _onCreateNewUser,
+                              child: const Text(
+                                'Create New User.',
+                                style: TextStyle(fontSize: 14),
+                              ),
                             ),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text('Go Back!'),
-                          ),
                         ],
                       ),
                     ),

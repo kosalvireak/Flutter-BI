@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bi/screens/createUser.dart';
+import 'package:flutter_bi/screens/home.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_bi/config.dart';
@@ -14,6 +15,8 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
+  var _obscureText = false;
+
   final _form = GlobalKey<FormState>();
   var _isLogin = true;
   var _enterdEmail = '';
@@ -21,45 +24,49 @@ class _AuthScreenState extends State<AuthScreen> {
   var _isSendingRequest = false;
 
   void _onlogin() async {
-    try {
-      setState(() {
-        _isSendingRequest = true;
-      });
-      final isValid = _form.currentState!.validate();
+    // try {
+    setState(() {
+      _isSendingRequest = true;
+    });
+    //   final isValid = _form.currentState!.validate();
 
-      if (isValid) {
-        _form.currentState!.save();
-        var reqBody = {"email": _enterdEmail, "password": _enterPassword};
-        BuildContext currentContext = context;
+    //   if (isValid) {
+    //     _form.currentState!.save();
+    //     var reqBody = {"email": _enterdEmail, "password": _enterPassword};
+    //     BuildContext currentContext = context;
 
-        var response = await http.post(Uri.parse(registration),
-            headers: {"Content-Type": "application/json"},
-            body: jsonEncode(reqBody));
+    //     var response = await http.post(Uri.parse(registration),
+    //         headers: {"Content-Type": "application/json"},
+    //         body: jsonEncode(reqBody));
 
-        var jsonResponse = jsonDecode(response.body);
+    //     var jsonResponse = jsonDecode(response.body);
 
-        if (jsonResponse['status']) {
-          setState(() {
-            _isSendingRequest = false;
-          });
-          ScaffoldMessenger.of(currentContext).clearSnackBars();
-          ScaffoldMessenger.of(currentContext).showSnackBar(
-            const SnackBar(
-              content: Text('Successfully create new User.'),
-            ),
-          );
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (ctx) => const CreateUserScreen()));
-        }
-      }
-    } catch (error) {
-      ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Something went wrong.'),
-        ),
-      );
-    }
+    //     if (jsonResponse['status']) {
+    //       setState(() {
+    //         _isSendingRequest = false;
+    //       });
+    //       ScaffoldMessenger.of(currentContext).clearSnackBars();
+    //       ScaffoldMessenger.of(currentContext).showSnackBar(
+    //         const SnackBar(
+    //           content: Text('Successfully create new User.'),
+    //         ),
+    //       );
+    setState(() {
+      _isSendingRequest = false;
+    });
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (ctx) => const HomeScreen()));
+
+    //     }
+    //   }
+    // } catch (error) {
+    //   ScaffoldMessenger.of(context).clearSnackBars();
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     const SnackBar(
+    //       content: Text('Something went wrong.'),
+    //     ),
+    //   );
+    // }
   }
 
   @override
@@ -73,9 +80,15 @@ class _AuthScreenState extends State<AuthScreen> {
             children: [
               const Text(
                 'Business Intelligence',
-                style: TextStyle(color: Colors.white, fontSize: 27),
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 34,
+                    fontWeight: FontWeight.w500),
               ),
               Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
                 margin: const EdgeInsets.all(20),
                 child: SingleChildScrollView(
                   child: Padding(
@@ -83,8 +96,19 @@ class _AuthScreenState extends State<AuthScreen> {
                     child: Form(
                       key: _form,
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          const SizedBox(height: 24),
+                          const Text(
+                            'Log in to your account',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
                           TextFormField(
                             decoration: const InputDecoration(
                                 labelText: 'Email Address'),
@@ -106,7 +130,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           TextFormField(
                             decoration:
                                 const InputDecoration(labelText: 'Password'),
-                            obscureText: true,
+                            obscureText: !_obscureText,
                             validator: (value) {
                               if (value == null || value.trim().length < 8) {
                                 return 'Password must be at least 8 characters long.';
@@ -118,27 +142,52 @@ class _AuthScreenState extends State<AuthScreen> {
                             },
                           ),
                           const SizedBox(height: 12),
+                          CheckboxListTile(
+                            title: const Text(
+                              "Show Password",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                            value: _obscureText,
+                            onChanged: (value) {
+                              setState(() {
+                                _obscureText = !_obscureText;
+                              });
+                            },
+                            controlAffinity: ListTileControlAffinity
+                                .leading, //  <-- leading Checkbox
+                          ),
+                          const SizedBox(height: 24),
                           if (_isSendingRequest)
                             const CircularProgressIndicator(),
                           if (!_isSendingRequest)
                             ElevatedButton(
-                              onPressed: _onlogin,
                               style: ElevatedButton.styleFrom(
-                                  backgroundColor: Theme.of(context)
-                                      .colorScheme
-                                      .primaryContainer),
-                              child: Text(_isLogin ? 'Login' : 'Signup'),
+                                backgroundColor:
+                                    const Color.fromARGB(255, 14, 47, 85),
+                                minimumSize: const Size.fromHeight(48),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              onPressed: _onlogin,
+                              child: const Text(
+                                'Login as Admin',
+                                style: TextStyle(fontSize: 14),
+                              ),
                             ),
-                          TextButton(
-                            onPressed: () {
-                              setState(() {
-                                _isLogin = !_isLogin;
-                              });
-                            },
-                            child: Text(_isLogin
-                                ? 'Create an account.'
-                                : 'Already have an account? Login!'),
-                          ),
+                          const SizedBox(height: 24),
+                          // TextButton(
+                          //   onPressed: () {
+                          //     setState(() {
+                          //       _isLogin = !_isLogin;
+                          //     });
+                          //   },
+                          //   child: Text('Login!'),
+                          // ),
                         ],
                       ),
                     ),
