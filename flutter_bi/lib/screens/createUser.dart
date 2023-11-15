@@ -21,12 +21,12 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
 
   void _onCreateNewUser() async {
     try {
-      setState(() {
-        _isSendingRequest = true;
-      });
       final isValid = _form.currentState!.validate();
 
       if (isValid) {
+        setState(() {
+          _isSendingRequest = true;
+        });
         _form.currentState!.save();
         var reqBody = {
           "name": _enterdName,

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bi/screens/allUsers.dart';
+import 'package:flutter_bi/screens/auth.dart';
 import 'package:flutter_bi/screens/createUser.dart';
 import 'package:flutter_bi/widget/main_drawer.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, required this.token});
@@ -16,11 +19,19 @@ class HomeScreen extends StatefulWidget {
 
 class _TabsScreenState extends State<HomeScreen> {
   int _selectedPageIndex = 0;
+  var imageUrl;
+  @override
+  void initState() {
+    super.initState();
+    Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token);
+    imageUrl = jwtDecodedToken['image'];
+  }
 
-  void _selectedPage(int index) {
-    setState(() {
-      _selectedPageIndex = index;
-    });
+  void _logOut() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('token');
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (ctx) => const AuthScreen()));
   }
 
   void _setScreen(String identifier) async {
@@ -48,6 +59,19 @@ class _TabsScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: Text(activePageTitle),
         backgroundColor: const Color.fromARGB(255, 14, 47, 85),
+        actions: [
+          GestureDetector(
+            onTap: _logOut,
+            child: CircleAvatar(
+              radius: 40,
+              backgroundColor: Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.all(3), // Border radius
+                child: ClipOval(child: Image.network(imageUrl)),
+              ),
+            ),
+          ),
+        ],
       ),
       drawer: MainDrawer(
         onSelectScreen: _setScreen,
