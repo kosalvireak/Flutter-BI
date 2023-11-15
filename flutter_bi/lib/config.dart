@@ -1,5 +1,6 @@
-final url = 'http://192.168.43.216:3000/';
-final registration = url + "api/flutter/user/register";
+const url = 'http://172.16.2.62:3000/';
+const registration = url + "api/flutter/user/register";
+const login = url + "api/flutter/user/login";
 
 // blue
 //const Color.fromARGB(255, 14, 47, 85)

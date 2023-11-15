@@ -4,7 +4,9 @@ import 'package:flutter_bi/screens/createUser.dart';
 import 'package:flutter_bi/widget/main_drawer.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({super.key, required this.token});
+
+  final String token;
 
   @override
   State<StatefulWidget> createState() {
@@ -34,7 +36,7 @@ class _TabsScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Widget activePage = const AllUsers();
+    Widget activePage = AllUsers(token: widget.token);
     var activePageTitle = 'All Users';
     if (_selectedPageIndex == 1) {
       activePage = const CreateUserScreen();

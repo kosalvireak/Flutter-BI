@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bi/screens/createUser.dart';
-import 'package:flutter_bi/screens/home.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_bi/config.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_bi/screens/home.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -22,51 +22,50 @@ class _AuthScreenState extends State<AuthScreen> {
   var _enterdEmail = '';
   var _enterPassword = '';
   var _isSendingRequest = false;
+  late SharedPreferences prefs;
+
+  @override
+  void initState() {
+    super.initState();
+    initSharedPref();
+  }
+
+  void initSharedPref() async {
+    prefs = await SharedPreferences.getInstance();
+  }
 
   void _onlogin() async {
-    // try {
-    setState(() {
-      _isSendingRequest = true;
-    });
-    //   final isValid = _form.currentState!.validate();
+    try {
+      setState(() {
+        _isSendingRequest = true;
+      });
+      final isValid = _form.currentState!.validate();
 
-    //   if (isValid) {
-    //     _form.currentState!.save();
-    //     var reqBody = {"email": _enterdEmail, "password": _enterPassword};
-    //     BuildContext currentContext = context;
+      if (isValid) {
+        _form.currentState!.save();
+        var reqBody = {"email": _enterdEmail, "password": _enterPassword};
+        print(reqBody);
+        var response = await http.post(Uri.parse(login),
+            headers: {"Content-Type": "application/json"},
+            body: jsonEncode(reqBody));
 
-    //     var response = await http.post(Uri.parse(registration),
-    //         headers: {"Content-Type": "application/json"},
-    //         body: jsonEncode(reqBody));
-
-    //     var jsonResponse = jsonDecode(response.body);
-
-    //     if (jsonResponse['status']) {
-    //       setState(() {
-    //         _isSendingRequest = false;
-    //       });
-    //       ScaffoldMessenger.of(currentContext).clearSnackBars();
-    //       ScaffoldMessenger.of(currentContext).showSnackBar(
-    //         const SnackBar(
-    //           content: Text('Successfully create new User.'),
-    //         ),
-    //       );
-    setState(() {
-      _isSendingRequest = false;
-    });
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (ctx) => const HomeScreen()));
-
-    //     }
-    //   }
-    // } catch (error) {
-    //   ScaffoldMessenger.of(context).clearSnackBars();
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     const SnackBar(
-    //       content: Text('Something went wrong.'),
-    //     ),
-    //   );
-    // }
+        var jsonResponse = jsonDecode(response.body);
+        if (jsonResponse['status']) {
+          var myToken = jsonResponse['token'];
+          prefs.setString('token', myToken);
+          print(myToken);
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (ctx) => HomeScreen(token: myToken)));
+        }
+      }
+    } catch (error) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Something went wrong.'),
+        ),
+      );
+    }
   }
 
   @override
