@@ -1,9 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bi/screens/auth.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class MainDrawer extends StatelessWidget {
-  const MainDrawer({super.key, required this.onSelectScreen});
+class MainDrawer extends StatefulWidget {
+  const MainDrawer(
+      {super.key, required this.onSelectScreen, required this.token});
 
   final void Function(String identifier) onSelectScreen;
+  final String token;
+
+  @override
+  State<MainDrawer> createState() => _MainDrawerState();
+}
+
+class _MainDrawerState extends State<MainDrawer> {
+  void _logOut() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('token');
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (ctx) => const AuthScreen()));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -47,24 +65,41 @@ class MainDrawer extends StatelessWidget {
                 ),
               ),
               onTap: () {
-                onSelectScreen('allusers');
+                widget.onSelectScreen('allusers');
               }),
           ListTile(
-              leading: const Icon(
-                Icons.person_add_alt_1_sharp,
-                size: 26,
+            leading: const Icon(
+              Icons.person_add_alt_1_sharp,
+              size: 26,
+              color: Colors.white,
+            ),
+            title: const Text(
+              'Create User',
+              style: TextStyle(
                 color: Colors.white,
+                fontSize: 18,
               ),
-              title: const Text(
-                'Create User',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                ),
+            ),
+            onTap: () {
+              widget.onSelectScreen('createusers');
+            },
+          ),
+          const SizedBox(height: 380),
+          ListTile(
+            leading: const Icon(
+              Icons.logout,
+              size: 26,
+              color: Colors.white,
+            ),
+            title: const Text(
+              'Logout!',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
               ),
-              onTap: () {
-                onSelectScreen('createusers');
-              }),
+            ),
+            onTap: _logOut,
+          ),
         ],
       ),
     );

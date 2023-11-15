@@ -13,6 +13,13 @@ class AllUsers extends StatefulWidget {
 
 class _AllUsersState extends State<AllUsers> {
   late String email;
+  late String user;
+
+  void _getUsers() {
+    setState(() {
+      user = "";
+    });
+  }
 
   @override
   void initState() {

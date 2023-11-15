@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, required this.token});
 
-  final String token;
+  final token;
 
   @override
   State<StatefulWidget> createState() {
@@ -25,13 +25,6 @@ class _TabsScreenState extends State<HomeScreen> {
     super.initState();
     Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token);
     imageUrl = jwtDecodedToken['image'];
-  }
-
-  void _logOut() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove('token');
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (ctx) => const AuthScreen()));
   }
 
   void _setScreen(String identifier) async {
@@ -61,7 +54,9 @@ class _TabsScreenState extends State<HomeScreen> {
         backgroundColor: const Color.fromARGB(255, 14, 47, 85),
         actions: [
           GestureDetector(
-            onTap: _logOut,
+            onTap: () {
+              print("User Profile Click!");
+            },
             child: CircleAvatar(
               radius: 40,
               backgroundColor: Colors.white,
@@ -75,6 +70,7 @@ class _TabsScreenState extends State<HomeScreen> {
       ),
       drawer: MainDrawer(
         onSelectScreen: _setScreen,
+        token: widget.token,
       ),
       body: activePage,
     );

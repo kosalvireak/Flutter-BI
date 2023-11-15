@@ -143,7 +143,7 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
                               _enterPassword = value!;
                             },
                           ),
-                          const SizedBox(height: 12),
+                          const SizedBox(height: 36),
                           if (_isSendingRequest)
                             const CircularProgressIndicator(),
                           if (!_isSendingRequest)
@@ -162,6 +162,7 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
                                 style: TextStyle(fontSize: 14),
                               ),
                             ),
+                          const SizedBox(height: 24),
                         ],
                       ),
                     ),

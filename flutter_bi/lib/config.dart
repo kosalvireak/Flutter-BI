@@ -1,4 +1,5 @@
-const url = 'http://172.16.2.62:3000/';
+// const url = 'http://172.16.2.62:3000/';
+const url = 'http://192.168.10.199:3000/';
 const registration = url + "api/flutter/user/register";
 const login = url + "api/flutter/user/login";
 

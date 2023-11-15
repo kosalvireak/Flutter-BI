@@ -98,7 +98,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const SizedBox(height: 24),
+                          const SizedBox(height: 12),
                           const Text(
                             'Log in to your account',
                             style: TextStyle(
@@ -107,7 +107,7 @@ class _AuthScreenState extends State<AuthScreen> {
                               fontWeight: FontWeight.w900,
                             ),
                           ),
-                          const SizedBox(height: 12),
+                          const SizedBox(height: 20),
                           TextFormField(
                             decoration: const InputDecoration(
                                 labelText: 'Email Address'),
@@ -179,14 +179,6 @@ class _AuthScreenState extends State<AuthScreen> {
                               ),
                             ),
                           const SizedBox(height: 24),
-                          // TextButton(
-                          //   onPressed: () {
-                          //     setState(() {
-                          //       _isLogin = !_isLogin;
-                          //     });
-                          //   },
-                          //   child: Text('Login!'),
-                          // ),
                         ],
                       ),
                     ),
