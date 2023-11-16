@@ -4,12 +4,11 @@ import 'package:flutter_bi/screens/auth.dart';
 import 'package:flutter_bi/screens/createUser.dart';
 import 'package:flutter_bi/widget/main_drawer.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, required this.token});
 
-  final token;
+  final String? token;
 
   @override
   State<StatefulWidget> createState() {
@@ -20,11 +19,12 @@ class HomeScreen extends StatefulWidget {
 class _TabsScreenState extends State<HomeScreen> {
   int _selectedPageIndex = 0;
   var imageUrl;
+
   @override
   void initState() {
     super.initState();
-    Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token);
-    imageUrl = jwtDecodedToken['image'];
+    Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token!);
+    imageUrl = jwtDecodedToken['image'].toString();
   }
 
   void _setScreen(String identifier) async {
@@ -40,7 +40,8 @@ class _TabsScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Widget activePage = AllUsers(token: widget.token);
+    print('Token type: ${widget.token.runtimeType}');
+    Widget activePage = AllUsers(token: widget.token!);
     var activePageTitle = 'All Users';
     if (_selectedPageIndex == 1) {
       activePage = const CreateUserScreen();
@@ -70,7 +71,7 @@ class _TabsScreenState extends State<HomeScreen> {
       ),
       drawer: MainDrawer(
         onSelectScreen: _setScreen,
-        token: widget.token,
+        token: widget.token!,
       ),
       body: activePage,
     );

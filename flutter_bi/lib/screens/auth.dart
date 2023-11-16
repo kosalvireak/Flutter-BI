@@ -142,10 +142,10 @@ class _AuthScreenState extends State<AuthScreen> {
                           ),
                           const SizedBox(height: 12),
                           CheckboxListTile(
-                            title: const Text(
+                            title: Text(
                               "Show Password",
                               style: TextStyle(
-                                color: Colors.black,
+                                color: Colors.grey[600],
                                 fontSize: 12,
                                 fontWeight: FontWeight.w900,
                               ),

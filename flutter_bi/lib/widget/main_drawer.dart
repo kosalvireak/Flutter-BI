@@ -8,7 +8,7 @@ class MainDrawer extends StatefulWidget {
       {super.key, required this.onSelectScreen, required this.token});
 
   final void Function(String identifier) onSelectScreen;
-  final String token;
+  final String? token;
 
   @override
   State<MainDrawer> createState() => _MainDrawerState();

@@ -13,6 +13,8 @@ class CreateUserScreen extends StatefulWidget {
 }
 
 class _CreateUserScreenState extends State<CreateUserScreen> {
+  var _obscureText = false;
+
   final _form = GlobalKey<FormState>();
   var _enterdName = '';
   var _enterdEmail = '';
@@ -132,7 +134,7 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
                           TextFormField(
                             decoration:
                                 const InputDecoration(labelText: 'Password'),
-                            obscureText: true,
+                            obscureText: !_obscureText,
                             validator: (value) {
                               if (value == null || value.trim().length < 8) {
                                 return 'Password must be at least 8 characters long.';
@@ -142,6 +144,25 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
                             onSaved: (value) {
                               _enterPassword = value!;
                             },
+                          ),
+                          const SizedBox(height: 12),
+                          CheckboxListTile(
+                            title: Text(
+                              "Show Password",
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 12,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                            value: _obscureText,
+                            onChanged: (value) {
+                              setState(() {
+                                _obscureText = !_obscureText;
+                              });
+                            },
+                            controlAffinity: ListTileControlAffinity
+                                .leading, //  <-- leading Checkbox
                           ),
                           const SizedBox(height: 36),
                           if (_isSendingRequest)

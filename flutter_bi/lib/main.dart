@@ -42,7 +42,7 @@ void main() async {
 }
 
 class App extends StatelessWidget {
-  App({Key? key, required this.token}) : super(key: key);
+  App({super.key, required this.token});
 
   final String? token;
 
