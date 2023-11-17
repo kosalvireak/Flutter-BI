@@ -21,6 +21,19 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
   var _enterPassword = '';
   var _isSendingRequest = false;
 
+  void _showScaffold(msg) {
+    BuildContext currentContext = context;
+    ScaffoldMessenger.of(currentContext).clearSnackBars();
+    ScaffoldMessenger.of(currentContext).showSnackBar(
+      SnackBar(
+        content: Text(msg),
+      ),
+    );
+    setState(() {
+      _isSendingRequest = false;
+    });
+  }
+
   void _onCreateNewUser() async {
     try {
       final isValid = _form.currentState!.validate();
@@ -35,7 +48,6 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
           "email": _enterdEmail,
           "password": _enterPassword
         };
-        BuildContext currentContext = context;
 
         var response = await http.post(Uri.parse(registration),
             headers: {"Content-Type": "application/json"},
@@ -44,24 +56,14 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
         var jsonResponse = jsonDecode(response.body);
 
         if (jsonResponse['status']) {
-          setState(() {
-            _isSendingRequest = false;
-          });
-          ScaffoldMessenger.of(currentContext).clearSnackBars();
-          ScaffoldMessenger.of(currentContext).showSnackBar(
-            const SnackBar(
-              content: Text('Successfully create new User.'),
-            ),
-          );
+          _showScaffold(jsonResponse['msg']);
+          return;
+        } else {
+          _showScaffold(jsonResponse['msg']);
         }
       }
     } catch (error) {
-      ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Something went wrong.'),
-        ),
-      );
+      _showScaffold("Something went wrong.");
     }
   }
 

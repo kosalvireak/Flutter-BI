@@ -38,6 +38,19 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
     });
   }
 
+  void _showScaffold(msg) {
+    BuildContext currentContext = context;
+    ScaffoldMessenger.of(currentContext).clearSnackBars();
+    ScaffoldMessenger.of(currentContext).showSnackBar(
+      SnackBar(
+        content: Text(msg),
+      ),
+    );
+    setState(() {
+      _isSendingRequest = false;
+    });
+  }
+
   void _onResetUser() async {
     try {
       final isValid = _form.currentState!.validate();
@@ -53,7 +66,6 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
           "email": _enterdEmail,
           "password": _enterNewPassword
         };
-        BuildContext currentContext = context;
 
         var response = await http.post(Uri.parse(resetUsers),
             headers: {"Content-Type": "application/json"},
@@ -62,24 +74,14 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
         var jsonResponse = jsonDecode(response.body);
 
         if (jsonResponse['status']) {
-          setState(() {
-            _isSendingRequest = false;
-          });
-          ScaffoldMessenger.of(currentContext).clearSnackBars();
-          ScaffoldMessenger.of(currentContext).showSnackBar(
-            const SnackBar(
-              content: Text('Successfully reset user infomation.'),
-            ),
-          );
+          _showScaffold("Successfull reset User.");
+          return;
+        } else {
+          _showScaffold(jsonResponse['msg']);
         }
       }
     } catch (error) {
-      ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Something went wrong.'),
-        ),
-      );
+      _showScaffold("Something went wrong.");
     }
   }
 

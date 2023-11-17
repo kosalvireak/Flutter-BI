@@ -20,15 +20,40 @@ class _AllUsersState extends State<AllUsers> {
   late String email;
   List? users = [];
 
-  void _getUsers() async {
-    var reqBody = {"email": email};
+  void _showScaffold(msg) {
+    BuildContext currentContext = context;
+    ScaffoldMessenger.of(currentContext).clearSnackBars();
+    ScaffoldMessenger.of(currentContext).showSnackBar(
+      SnackBar(
+        content: Text(msg),
+      ),
+    );
+  }
 
-    var response = await http.post(Uri.parse(getUsers),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode(reqBody));
-    var jsonResponse = jsonDecode(response.body);
-    users = jsonResponse['users'];
-    setState(() {});
+  void _getUsers() async {
+    try {
+      var reqBody = {"email": email};
+
+      var response = await http.post(Uri.parse(getUsers),
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode(reqBody));
+
+      var jsonResponse = jsonDecode(response.body);
+
+      if (jsonResponse['status']) {
+        users = jsonResponse['users'];
+        setState(() {});
+
+        return;
+      } else {
+        setState(() {
+          users = [];
+        });
+        _showScaffold(jsonResponse['msg']);
+      }
+    } catch (error) {
+      _showScaffold("Something went wrong.");
+    }
   }
 
   bool _isOwner(shownUser) {
@@ -58,7 +83,7 @@ class _AllUsersState extends State<AllUsers> {
         itemBuilder: (context, index) => Card(
           child: ListTile(
             tileColor: _isOwner(users![index]['email'])
-                ? Color.fromARGB(255, 46, 215, 69)
+                ? const Color.fromARGB(255, 46, 215, 69)
                 : const Color.fromARGB(134, 169, 165, 165),
             leading: const Icon(Icons.person_sharp),
             title: Text(users![index]['name']),
@@ -74,26 +99,16 @@ class _AllUsersState extends State<AllUsers> {
         ),
       ),
     );
-    if (users == null) {
-      content = Center(
+
+    if (users!.isEmpty) {
+      content = const Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
               'Uh ho... Nothing here!',
-              style: Theme.of(context).textTheme.headlineLarge!.copyWith(
-                    color: Theme.of(context).colorScheme.onBackground,
-                  ),
+              style: TextStyle(color: Colors.white),
             ),
-            const SizedBox(
-              height: 16,
-            ),
-            Text(
-              'Try selecting a different category!',
-              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                    color: Theme.of(context).colorScheme.onBackground,
-                  ),
-            )
           ],
         ),
       );

@@ -29,6 +29,19 @@ class _AuthScreenState extends State<AuthScreen> {
     initSharedPref();
   }
 
+  void _showScaffold(msg) {
+    BuildContext currentContext = context;
+    ScaffoldMessenger.of(currentContext).clearSnackBars();
+    ScaffoldMessenger.of(currentContext).showSnackBar(
+      SnackBar(
+        content: Text(msg),
+      ),
+    );
+    setState(() {
+      _isSendingRequest = false;
+    });
+  }
+
   void initSharedPref() async {
     prefs = await SharedPreferences.getInstance();
   }
@@ -48,20 +61,19 @@ class _AuthScreenState extends State<AuthScreen> {
             body: jsonEncode(reqBody));
 
         var jsonResponse = jsonDecode(response.body);
+
         if (jsonResponse['status']) {
           var myToken = jsonResponse['token'];
           prefs.setString('token', myToken);
           Navigator.of(context).push(
               MaterialPageRoute(builder: (ctx) => HomeScreen(token: myToken)));
+          return;
+        } else {
+          _showScaffold(jsonResponse['msg']);
         }
       }
     } catch (error) {
-      ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Something went wrong.'),
-        ),
-      );
+      _showScaffold("Something went wrong.");
     }
   }
 
