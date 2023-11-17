@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bi/screens/auth.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MainDrawer extends StatefulWidget {
@@ -15,7 +14,7 @@ class MainDrawer extends StatefulWidget {
 }
 
 class _MainDrawerState extends State<MainDrawer> {
-  void _logOut() async {
+  void _logOut(context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('token');
     Navigator.of(context)
@@ -25,6 +24,7 @@ class _MainDrawerState extends State<MainDrawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      width: 250,
       backgroundColor: const Color.fromARGB(255, 14, 47, 85),
       child: Column(
         children: [
@@ -98,7 +98,9 @@ class _MainDrawerState extends State<MainDrawer> {
                 fontSize: 18,
               ),
             ),
-            onTap: _logOut,
+            onTap: () {
+              _logOut(context);
+            },
           ),
         ],
       ),

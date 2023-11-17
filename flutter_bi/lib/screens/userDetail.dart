@@ -95,14 +95,25 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Container(
+            margin: const EdgeInsets.only(
+              top: 20,
+              bottom: 10,
+            ),
             alignment: Alignment.bottomCenter,
             height: 150,
             child: CircleAvatar(
-              radius: 70,
+              radius: 90,
               backgroundColor: Colors.white,
               child: Padding(
                 padding: const EdgeInsets.all(3), // Border radius
-                child: ClipOval(child: Image.network(widget.user.image)),
+                child: ClipOval(
+                  child: Image.network(
+                    widget.user.image,
+                    width: 147,
+                    height: 147,
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
             ),
           ),
@@ -112,7 +123,8 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
-              margin: const EdgeInsets.all(20),
+              margin: const EdgeInsets.only(
+                  top: 10, bottom: 10, left: 50, right: 50),
               child: SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.all(16),
@@ -215,15 +227,6 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                   ),
                 ),
               ),
-            ),
-          ),
-          Container(
-            alignment: Alignment.center,
-            height: 100,
-            color: Colors.deepOrange,
-            child: Text(
-              'Widget 3',
-              style: TextStyle(fontSize: 18, color: Colors.white),
             ),
           ),
         ],

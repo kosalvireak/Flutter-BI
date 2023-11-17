@@ -52,13 +52,13 @@ class _AllUsersState extends State<AllUsers> {
   @override
   Widget build(BuildContext context) {
     Widget content = Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(15),
       child: ListView.builder(
         itemCount: users!.length,
         itemBuilder: (context, index) => Card(
           child: ListTile(
             tileColor: _isOwner(users![index]['email'])
-                ? const Color.fromARGB(255, 255, 255, 255)
+                ? Color.fromARGB(255, 46, 215, 69)
                 : const Color.fromARGB(134, 169, 165, 165),
             leading: const Icon(Icons.person_sharp),
             title: Text(users![index]['name']),
@@ -69,6 +69,7 @@ class _AllUsersState extends State<AllUsers> {
               var user = User.fromJson(users![index]);
               _selectUser(context, user);
             },
+            visualDensity: const VisualDensity(vertical: -4),
           ),
         ),
       ),

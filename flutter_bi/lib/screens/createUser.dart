@@ -86,7 +86,7 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
-                margin: const EdgeInsets.all(20),
+                margin: const EdgeInsets.all(50),
                 child: SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.all(16),

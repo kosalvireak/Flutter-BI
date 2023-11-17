@@ -18,7 +18,6 @@ class _AuthScreenState extends State<AuthScreen> {
   var _obscureText = false;
 
   final _form = GlobalKey<FormState>();
-  var _isLogin = true;
   var _enterdEmail = '';
   var _enterPassword = '';
   var _isSendingRequest = false;
@@ -44,7 +43,6 @@ class _AuthScreenState extends State<AuthScreen> {
       if (isValid) {
         _form.currentState!.save();
         var reqBody = {"email": _enterdEmail, "password": _enterPassword};
-        print(reqBody);
         var response = await http.post(Uri.parse(login),
             headers: {"Content-Type": "application/json"},
             body: jsonEncode(reqBody));
@@ -53,7 +51,6 @@ class _AuthScreenState extends State<AuthScreen> {
         if (jsonResponse['status']) {
           var myToken = jsonResponse['token'];
           prefs.setString('token', myToken);
-          print(myToken);
           Navigator.of(context).push(
               MaterialPageRoute(builder: (ctx) => HomeScreen(token: myToken)));
         }

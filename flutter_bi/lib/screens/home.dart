@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bi/screens/allUsers.dart';
-import 'package:flutter_bi/screens/auth.dart';
+import 'package:flutter_bi/model/User.dart';
+import 'package:flutter_bi/screens/userDetail.dart';
 import 'package:flutter_bi/screens/createUser.dart';
 import 'package:flutter_bi/widget/main_drawer.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -17,14 +18,27 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _TabsScreenState extends State<HomeScreen> {
-  int _selectedPageIndex = 0;
-  var imageUrl;
+  final _selectedPageIndex = 0;
+  String? imageUrl;
+  late User user;
 
   @override
   void initState() {
     super.initState();
     Map<String, dynamic> jwtDecodedToken = JwtDecoder.decode(widget.token!);
+    user = User(
+      id: jwtDecodedToken['id'],
+      image: jwtDecodedToken['image'],
+      name: jwtDecodedToken['name'],
+      email: jwtDecodedToken['email'],
+    );
+
     imageUrl = jwtDecodedToken['image'].toString();
+  }
+
+  void _selectUser(BuildContext context, User user) {
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (ctx) => UserDetailScreen(user: user)));
   }
 
   void _setScreen(String identifier) async {
@@ -40,7 +54,6 @@ class _TabsScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print('Token type: ${widget.token.runtimeType}');
     Widget activePage = AllUsers(token: widget.token!);
     var activePageTitle = 'All Users';
     if (_selectedPageIndex == 1) {
@@ -56,16 +69,43 @@ class _TabsScreenState extends State<HomeScreen> {
         actions: [
           GestureDetector(
             onTap: () {
-              print("User Profile Click!");
+              _selectUser(context, user);
             },
             child: CircleAvatar(
               radius: 40,
-              backgroundColor: Colors.white,
-              child: Padding(
-                padding: const EdgeInsets.all(3), // Border radius
-                child: ClipOval(child: Image.network(imageUrl)),
+              backgroundColor: const Color.fromARGB(255, 14, 47, 85),
+              child: ClipOval(
+                child: Image.network(
+                  imageUrl!,
+                  width: 45,
+                  height: 45,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
+            // child: Container(
+            //   margin: const EdgeInsets.only(
+            //     top: 5,
+            //     bottom: 5,
+            //   ),
+            //   alignment: Alignment.bottomCenter,
+            //   height: 50,
+            //   child: CircleAvatar(
+            //     radius: 90,
+            //     backgroundColor: Colors.white,
+            //     child: Padding(
+            //       padding: const EdgeInsets.all(3), // Border radius
+            //       child: ClipOval(
+            //         child: Image.network(
+            //           imageUrl,
+            //           width: 47,
+            //           height: 47,
+            //           fit: BoxFit.cover,
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
           ),
         ],
       ),

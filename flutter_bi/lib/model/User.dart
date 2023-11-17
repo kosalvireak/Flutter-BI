@@ -3,16 +3,12 @@ class User {
   final String id;
   final String name;
   final String email;
-  final DateTime date;
-  final int v;
 
   User({
     required this.image,
     required this.id,
     required this.name,
     required this.email,
-    required this.date,
-    required this.v,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -21,8 +17,6 @@ class User {
       id: json['_id'] ?? '',
       name: json['name'] ?? '',
       email: json['email'] ?? '',
-      date: DateTime.parse(json['date'] ?? ''),
-      v: json['__v'] ?? 0,
     );
   }
 
@@ -32,8 +26,6 @@ class User {
       '_id': id,
       'name': name,
       'email': email,
-      'date': date.toIso8601String(),
-      '__v': v,
     };
   }
 }
