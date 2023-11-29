@@ -58,7 +58,7 @@ class _MainDrawerState extends State<MainDrawer> {
                 color: Colors.white,
               ),
               title: const Text(
-                'Users',
+                'All Users',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 18,

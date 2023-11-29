@@ -55,6 +55,11 @@ class _AuthScreenState extends State<AuthScreen> {
 
       if (isValid) {
         _form.currentState!.save();
+        // check if admin
+        if (_enterdEmail != 'virakvary@gmail.com') {
+          _showScaffold("You are not an Admin!");
+          return;
+        }
         var reqBody = {"email": _enterdEmail, "password": _enterPassword};
         var response = await http.post(Uri.parse(login),
             headers: {"Content-Type": "application/json"},

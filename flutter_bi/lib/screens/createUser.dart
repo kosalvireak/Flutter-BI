@@ -71,7 +71,7 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create New User'),
+        title: const Text('Create User'),
         backgroundColor: const Color.fromARGB(255, 14, 47, 85),
       ),
       backgroundColor: const Color.fromARGB(255, 11, 39, 72),
